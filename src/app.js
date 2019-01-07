@@ -2,7 +2,7 @@ console.log('Loading, please wait...');
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const token = 'my-token';
+const token = 'NTMxNzc1NjQ2NTYxNDY4NDI2.DxS2Sw.depxm3wdnsTIb6nL5dWXaqYSkpg';
 
 const credential = require('./credential.json');
 const ytdl = require('ytdl-core');
@@ -64,7 +64,6 @@ client.on('message', message => {
                     let voiceChannel = client.channels.get('531773797863391255');
                     voiceChannel.join().then(connection => {
                         let stream = ytdl(args[2], { filter: 'audioonly' });
-                        stream.
                         let dispatcher = connection.playStream(stream, streamOptions);
                         // dispatcher.on('end', end => { voiceChannel.leave() });
                     }).catch(console.error);
