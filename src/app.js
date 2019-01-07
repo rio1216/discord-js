@@ -2,7 +2,7 @@ console.log('Loading, please wait...');
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const token = 'NTMxNzc1NjQ2NTYxNDY4NDI2.DxS2Sw.depxm3wdnsTIb6nL5dWXaqYSkpg';
+const token = 'my-token';
 
 const credential = require('./credential.json');
 const ytdl = require('ytdl-core');
@@ -63,13 +63,29 @@ client.on('message', message => {
 
                     let voiceChannel = client.channels.get('531773797863391255');
                     voiceChannel.join().then(connection => {
+                        message.reply("Downloading audio...");
                         let stream = ytdl(args[2], { filter: 'audioonly' });
                         let dispatcher = connection.playStream(stream, streamOptions);
-                        // dispatcher.on('end', end => { voiceChannel.leave() });
+                        ytdl.getInfo(args[2], function(error, info) {
+                            message.reply("Now Playing: " + info.title);
+                            setGame(info.title);
+                        });
+                        dispatcher.on('end', end => { setGame("Hello, Rio!") });
                     }).catch(console.error);
                     return;
                 }
-                message.reply("Usage: !admin play <youtube-url>")
+                message.reply("Usage: !admin play <youtube-url>");
+                return;
+            }
+
+            if (args[1].toLowerCase() === "title") {
+                if (args.length > 2) {
+                    ytdl.getInfo(args[2], function (error, info) {
+                        message.reply("Title: " + info.title);
+                    });
+                    return;
+                }
+                message.reply("Usage: !admin title <url>")
                 return;
             }
 
@@ -84,3 +100,13 @@ client.on('message', message => {
     }
 });
 client.login(token);
+
+function setGame(game) {
+    client.user.setPresence({
+        game: {
+            name: game,
+            type: "PLAYING"
+        },
+        status: 'online'
+    });
+}
