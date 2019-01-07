@@ -4,8 +4,18 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = 'my-token';
 
+const credential = require('./credential.json');
+const ytdl = require('ytdl-core');
+
 client.on('ready', () => {
     console.log('Loaded discord.js!');
+    client.user.setPresence({
+        game: {
+            name: "Hello, Rio!",
+            type: "PLAYING"
+        },
+        status: 'online'
+    });
 });
 
 client.on('message', message => {
@@ -34,6 +44,39 @@ client.on('message', message => {
                 message.reply('Shutdown now...').catch(console.error);
                 process.exit();
                 return;
+            }
+
+            if (args[1].toLowerCase() === "join") {
+                message.reply('Joining...').catch(console.error);
+
+                let voiceChannel = client.channels.get('531773797863391255');
+                voiceChannel.join().then(connection => {
+                    const dispatcher = connection.playFile('defy.mp3');
+                    dispatcher.on('end', end => { voiceChannel.leave() });
+                }).catch(console.error);
+                return;
+            }
+
+            if (args[1].toLowerCase() === "play") {
+                if (args.length > 2) {
+                    streamOptions = { seek: 0, volume: 1 }
+
+                    let voiceChannel = client.channels.get('531773797863391255');
+                    voiceChannel.join().then(connection => {
+                        let stream = ytdl(args[2], { filter: 'audioonly' });
+                        stream.
+                        let dispatcher = connection.playStream(stream, streamOptions);
+                        // dispatcher.on('end', end => { voiceChannel.leave() });
+                    }).catch(console.error);
+                    return;
+                }
+                message.reply("Usage: !admin play <youtube-url>")
+                return;
+            }
+
+            if (args[1].toLowerCase() === "leave") {
+                let voiceChannel = client.channels.get('531773797863391255');
+                voiceChannel.leave();
             }
         }
 
