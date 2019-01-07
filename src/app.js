@@ -81,7 +81,7 @@ client.on('message', message => {
             if (args[1].toLowerCase() === "title") {
                 if (args.length > 2) {
                     ytdl.getInfo(args[2], function (error, info) {
-                        message.reply("Title: " + info.title);
+                        message.reply("Author: " + info.author.name + "\nTitle: " + info.title + "\nDuration: " + info.length_seconds);
                     });
                     return;
                 }
@@ -105,7 +105,8 @@ function setGame(game) {
     client.user.setPresence({
         game: {
             name: game,
-            type: "PLAYING"
+            type: "STREAMING",
+            url: "https://twitch.tv/unknown"
         },
         status: 'online'
     });
